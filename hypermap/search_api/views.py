@@ -126,7 +126,7 @@ def elasticsearch(serializer, catalog):
         "query": {
             "bool": {
                 "must": must_array,
-                "filter": filter_dic
+                #"filter": filter_dic
             }
         }
     }
