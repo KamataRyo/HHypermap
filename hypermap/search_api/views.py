@@ -58,9 +58,12 @@ def elasticsearch(serializer, catalog):
 
     # String searching
     if q_text:
+        # Wrapping query string into a query filter.
         query_string = {
-            "query_string": {
-                "query": q_text
+            "query": {
+                "query_string": {
+                    "query": q_text
+                }
             }
         }
         # add string searching
