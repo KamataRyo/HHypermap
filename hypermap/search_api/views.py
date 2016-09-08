@@ -124,12 +124,17 @@ def elasticsearch(serializer, catalog):
 
     dic_query = {
         "query": {
-            "bool": {
-                "must": must_array,
-                #"filter": filter_dic
+            "filtered": {
+                "filter":{
+                    "bool": {
+                        "must": must_array,
+                        "should": filter_dic
+                    }
+                }
             }
         }
     }
+
     # Page
     if d_docs_limit:
         dic_query["size"] = d_docs_limit
