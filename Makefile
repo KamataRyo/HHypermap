@@ -16,6 +16,8 @@ END_TO_END_TEST_FLAGS=-e REGISTRY_SKIP_CELERY=False \
 TEST_CSW_TRANSACTIONS_FLAGS=-e REGISTRY_SKIP_CELERY=True \
                          -e BROWSER_HYPERMAP_URL=http://nginx \
                          -e REGISTRY_HARVEST_SERVICES=False
+POSTGRES_DUMP_FILE=$(HOME)/.postgres.dump
+
 pre-up:
 	# Bring up the database and rabbitmq first
 	$(DOCKER_COMPOSE) up -d postgres rabbitmq
@@ -88,5 +90,11 @@ reset: pull build restart
 flake:
 	flake8 hypermap --ignore=E121,E123,E126,E226,E24,E704,W503,W504
 
+dump:
+	$(DOCKER_COMPOSE) exec postgres pg_dump -U postgres > $(POSTGRES_DUMP_FILE)
+
+restore:
+	$(DOCKER_COMPOSE) exec postgres psql -U postgres < $(POSTGRES_DUMP_FILE)
+	rm $(POSTGRES_DUMP_FILE)
 
 .PHONY: pre-up wait up build sync logs down test-unit test-search test-solr test-elastic test shell start restart pull reset flake
